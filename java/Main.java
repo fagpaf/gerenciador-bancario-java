@@ -3,11 +3,13 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         // Você pode usar a classe Conta direto, sem import nenhum no topo!
-        Conta minhaConta = new Conta("123-X", 500.0);
+        Conta minhaConta = new Conta("123-X", 500);
         Produto arroz = new Produto("arroz", 4, 10);
         Produto feijao = new Produto("feijao", 7, 17);
         Produto macarrao = new Produto("macarrao", 9.50, 4);
         
+        minhaConta.creditar(.5);
+
        // 1. Criando a lista de compras
         ArrayList<Produto> listaDeCompras = new ArrayList<>();
         
@@ -26,6 +28,8 @@ public class Main {
             p.setQtd(p.getQtd() - 1); 
         }
         
+        minhaConta.debitar(totalCompra);
+
         System.out.println("Total da lista de compras: R$ " + totalCompra);
         
         System.out.println("Saldo final da conta: R$ " + minhaConta.getSaldo());
