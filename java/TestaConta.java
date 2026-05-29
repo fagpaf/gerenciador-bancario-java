@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Main {
+public class TestaConta {
     public static void main(String[] args) {
         // Você pode usar a classe Conta direto, sem import nenhum no topo!
         Conta minhaConta = new Conta("123-X");

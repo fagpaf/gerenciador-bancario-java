@@ -2,10 +2,16 @@ public class Conta {
     protected String numero;
     private double saldo;
 
-    // CONSTRUTOR: Tem o mesmo nome da classe e NÃO tem tipo de retorno
+    // Construtor sem saldo inical
     public Conta(String numeroInicial) {
         this.numero = numeroInicial;
         this.saldo = 0.0;
+    }
+
+    // Com saldo inicial
+    public Conta(String numeroInicial, double saldoInicial) {
+        this.numero = numeroInicial;
+        this.saldo = saldoInicial;
     }
 
     // Retorna o próprio objeto atualizado

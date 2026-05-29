@@ -8,6 +8,17 @@ public class Programa {
         Conta c2 = new Conta("222-2");
         Poupanca p3 = new Poupanca("333-3"); // Criada direto como Poupança para usarmos o juros depois
 
+
+        Conta conta;
+        conta = new ContaEspecial("21.342-7");
+        ((Conta)conta).creditar(500.00);
+        conta.debitar(100.00);
+        if (conta instanceof ContaEspecial) {
+        ((ContaEspecial) conta).renderBonus();
+        }
+        System.out.println(conta.getSaldo());
+
+
         // 1. Testando os cadastros
         banco.cadastrar(c1);
         banco.cadastrar(c2);
@@ -34,3 +45,8 @@ public class Programa {
         System.out.println("Saldo Final da Poupança 333-3: R$ " + banco.getSaldo("333-3"));
     }
 }
+
+/*
+javac -d . Banco.java Programa.java Conta.java Poupanca.java ContaEspecial.java
+java banco.Programa
+*/
