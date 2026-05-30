@@ -8,7 +8,7 @@ public class Conta {
         this.saldo = 0.0;
     }
 
-    // Com saldo inicial
+    // Construtor com um depósito inicial 
     public Conta(String numeroInicial, double saldoInicial) {
         this.numero = numeroInicial;
         this.saldo = saldoInicial;

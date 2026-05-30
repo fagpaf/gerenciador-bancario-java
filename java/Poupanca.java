@@ -1,4 +1,4 @@
-public class Poupanca extends Conta{
+public class Poupanca extends Conta {
 
     public Poupanca(String numero) {
         super(numero);
