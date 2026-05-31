@@ -4,7 +4,7 @@ public class Programa {
         Banco banco = new Banco();
 
         // Criando Contas normais e Poupanças (Polimorfismo: Poupança é uma Conta!)
-        Conta c1 = new Conta("111-1");
+        ContaImposto c1 = new ContaImposto("111-1");
         Conta c2 = new Conta("222-2");
         Poupanca p3 = new Poupanca("333-3"); // Criada direto como Poupança para usarmos o juros depois
 
@@ -38,6 +38,7 @@ public class Programa {
         // Taxa de 10% (0.10) sobre o saldo atual dela de 1500 (deve render +150 e ir para 1650)
         p3.renderJuros(0.10);
 
+        c1.debitar(100);
         // 4. Testando o método GETSALDO 3 vezes para exibir os resultados
         System.out.println("--- RESULTADOS FINAIS ---");
         System.out.println("Saldo Final da Conta 111-1: R$ " + banco.getSaldo("111-1"));

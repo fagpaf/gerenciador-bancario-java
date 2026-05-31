@@ -1,19 +1,19 @@
 import java.util.ArrayList;
 
 public class Banco {
-    private ArrayList<Conta> contas;
+    private ArrayList<ContaAbstrata> contas;
     private int idx;
     private double taxa;
 
     public Banco() {
-        this.contas = new ArrayList<Conta>(100);
+        this.contas = new ArrayList<ContaAbstrata>(100);
         this.idx = 0;
         this.taxa = 0.15;
 
         for (int i = 0; i < 100; i++) {this.contas.add(null);}
     }
 
-    public void cadastrar(Conta novaConta) {
+    public void cadastrar(ContaAbstrata novaConta) {
         if (idx < 100) {
             this.contas.set(idx, novaConta);
             this.idx++;
@@ -25,7 +25,7 @@ public class Banco {
     public void creditar(String numero, double valor) {
         // Percorre o array de contas usando o índice atual
         for (int i = 0; i < this.idx; i++) {
-            Conta contaAtual = this.contas.get(i);
+            ContaAbstrata contaAtual = this.contas.get(i);
             // Encontrou a conta com o número certo?
             if (contaAtual.getNumero().equals(numero)) {
                 contaAtual.creditar(valor);
@@ -37,7 +37,7 @@ public class Banco {
 
     public void debitar(String numero, double valor) {
         for (int i = 0; i < this.idx; i++) {
-            Conta contaAtual = this.contas.get(i);
+            ContaAbstrata contaAtual = this.contas.get(i);
             if (contaAtual.getNumero().equals(numero)) {
                 contaAtual.debitar(valor);
                 return;
@@ -48,7 +48,7 @@ public class Banco {
 
     public void renderJuros(String numero) {
         for (int i = 0; i < this.idx; i++) {
-            Conta contaAtual = this.contas.get(i);
+            ContaAbstrata contaAtual = this.contas.get(i);
             if (contaAtual.getNumero().equals(numero)) {
                 // Verificando se a conta realmente é uma Poupanca
                 if (contaAtual instanceof Poupanca) {
@@ -65,7 +65,7 @@ public class Banco {
 
     public void renderBonus(String numero) {
         for (int i = 0; i < this.idx; i++) {
-            Conta contaAtual = this.contas.get(i);
+            ContaAbstrata contaAtual = this.contas.get(i);
             if (contaAtual.getNumero().equals(numero)) {
                 // Verificando se é uma conta do tipo Especial
                 if (contaAtual instanceof ContaEspecial) {
@@ -83,10 +83,10 @@ public class Banco {
     }
 
     public void transferir(String numeroPagador, String numeroRecebedor, double valor) {
-        Conta pagador = null;
-        Conta recebedor = null;
+        ContaAbstrata pagador = null;
+        ContaAbstrata recebedor = null;
         for (int i = 0; i < this.idx; i++) {
-            Conta contaAtual = this.contas.get(i);
+            ContaAbstrata contaAtual = this.contas.get(i);
             if (contaAtual.getNumero().equals(numeroPagador)) {
                 pagador = contaAtual;
             }
@@ -94,20 +94,20 @@ public class Banco {
             if (contaAtual.getNumero().equals(numeroRecebedor)) {
                 recebedor = contaAtual;
             }
-        
-        if (pagador == null || recebedor == null) {
+        }
+
+        if (pagador == null || recebedor == null || pagador == recebedor) {
             System.out.println("Erro: Verififque o numero das Contas");
             return;
         }
         
         pagador.debitar(valor);
         recebedor.creditar(valor);
-        }
     }
 
     public double getSaldo(String numero) {
         for (int i = 0; i < this.idx; i++) {
-            Conta contaAtual = this.contas.get(i);
+            ContaAbstrata contaAtual = this.contas.get(i);
             if (contaAtual.getNumero().equals(numero)) {
                 return contaAtual.getSaldo();
             }
