@@ -1,6 +1,6 @@
 package repositorio;
 import java.util.ArrayList;
-
+import excecoes.ContaNaoEncontradaException;
 import negocio.ContaAbstrata;
 
 public class RepositorioContasArray implements RepositorioContas {
@@ -11,50 +11,43 @@ public class RepositorioContasArray implements RepositorioContas {
         this.contas = new ArrayList<ContaAbstrata>();
     }
 
-    public void inserir(ContaAbstrata novaConta) {
+    public void inserir(ContaAbstrata novaConta) throws ContaNaoEncontradaException {
         // Se o array é maior ou igual a 100 e se a consta já existe no array
         if (this.contas.size() >= 100 || existe(novaConta.getNumero())) {
-            printError(novaConta.getNumero());
+            throw new ContaNaoEncontradaException(novaConta.getNumero());
         } 
         this.contas.add(novaConta);
     }
 
-    public ContaAbstrata procurar(String numero) {
+    public ContaAbstrata procurar(String numero) throws ContaNaoEncontradaException {
         for (ContaAbstrata contaAtual : this.contas) {
             if (contaAtual.getNumero().equals(numero)) {
                 return contaAtual;
             }
         }
-        return null;
+        throw new ContaNaoEncontradaException(numero);
     }
 
-    public void remover(String numero) {
+    public void remover(String numero) throws ContaNaoEncontradaException {
         ContaAbstrata contaAtual = procurar(numero);
-        if (contaAtual == null) {
-            printError(numero);
-        }
         this.contas.remove(contaAtual);
     }
 
-    public void atualizar(ContaAbstrata conta) {
+    public void atualizar(ContaAbstrata conta) throws ContaNaoEncontradaException {
         ContaAbstrata contaAntiga = procurar(conta.getNumero());
         if (contaAntiga == null) {
-            printError(conta.getNumero());
+            throw new ContaNaoEncontradaException(conta.getNumero());
         }
         this.contas.remove(contaAntiga);
         this.contas.add(conta);
     }
 
-    public boolean existe(String numero) {
-        ContaAbstrata contaAtual = procurar(numero);
-        if (contaAtual == null) {
-            return false;
-        }
-        return true;
+    public boolean existe(String numero) throws ContaNaoEncontradaException {
+        try {
+            // Se a conta for encontrada o código continua
+            procurar(numero);
+            return true;
+        } 
+        catch (ContaNaoEncontradaException e) {return false;}
     }
-
-    public void printError(String numero) {
-        throw new RuntimeException("Erro: Conta " + numero + " não encontrada!");
-    }
-
 }

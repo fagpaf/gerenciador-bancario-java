@@ -1,4 +1,5 @@
 package negocio;
+import excecoes.SaldoInsuficienteException;
 /*
 Uma classe abstrata é uma classe que não pode ser instanciada (ou seja, você não pode dar new nela),
 mas que serve de superclasse para outras classes.
@@ -25,5 +26,5 @@ public abstract class ContaAbstrata {
         this.saldo = this.saldo + valor;
     }
 
-    public abstract void debitar(double valor);
+    public abstract void debitar(double valor) throws SaldoInsuficienteException;
 }
