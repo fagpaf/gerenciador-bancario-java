@@ -1,4 +1,7 @@
+package repositorio;
 import java.util.ArrayList;
+
+import negocio.ContaAbstrata;
 
 public class RepositorioContasArray implements RepositorioContas {
     

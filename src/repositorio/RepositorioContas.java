@@ -1,3 +1,6 @@
+package repositorio;
+import negocio.ContaAbstrata;
+
 public interface RepositorioContas {
     void inserir(ContaAbstrata conta);
     ContaAbstrata procurar(String numero);

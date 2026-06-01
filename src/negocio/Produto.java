@@ -1,3 +1,4 @@
+package negocio;
 public class Produto {
     private String descricao;
     private double preco;
@@ -31,6 +32,4 @@ public class Produto {
     public double getPreco() {return preco;}
 
     public String getDescricao() {return descricao;}
-
-
 }

@@ -1,3 +1,4 @@
+package negocio;
 public class Poupanca extends Conta {
 
     public Poupanca(String numero) {

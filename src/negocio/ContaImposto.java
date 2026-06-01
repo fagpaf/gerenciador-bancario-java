@@ -1,3 +1,4 @@
+package negocio;
 public class ContaImposto extends ContaAbstrata {
     // Existe apenas uma cópia na memória E o valor é imutável.
     private static final double CPMF = 0.005;

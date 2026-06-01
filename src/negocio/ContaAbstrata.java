@@ -1,3 +1,4 @@
+package negocio;
 /*
 Uma classe abstrata é uma classe que não pode ser instanciada (ou seja, você não pode dar new nela),
 mas que serve de superclasse para outras classes.

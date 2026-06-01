@@ -1,3 +1,4 @@
+package negocio;
 public class ContaEspecial extends Conta{
     private double bonus;
     

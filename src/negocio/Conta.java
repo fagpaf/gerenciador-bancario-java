@@ -1,3 +1,4 @@
+package negocio;
 public class Conta extends ContaAbstrata {
     public Conta(String numeroInicial) {
         super(numeroInicial);
