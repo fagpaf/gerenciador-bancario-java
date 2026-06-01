@@ -1,104 +1,66 @@
-import java.util.ArrayList;
+
 
 public class Banco {
-    private ArrayList<ContaAbstrata> contas;
-    private int idx;
     private double taxa;
-
+    private ContaAbstrata contaAtual;
     public Banco() {
-        this.contas = new ArrayList<ContaAbstrata>(100);
-        this.idx = 0;
         this.taxa = 0.15;
-
-        for (int i = 0; i < 100; i++) {this.contas.add(null);}
-    }
-
-    public void cadastrar(ContaAbstrata novaConta) {
-        if (idx < 100) {
-            this.contas.set(idx, novaConta);
-            this.idx++;
-        } else {
-            System.out.println("O banco atingiu o limite de 100 contas!");
-        }
-    }
+    }    
 
     public void creditar(String numero, double valor) {
-        // Percorre o array de contas usando o índice atual
-        for (int i = 0; i < this.idx; i++) {
-            ContaAbstrata contaAtual = this.contas.get(i);
-            // Encontrou a conta com o número certo?
-            if (contaAtual.getNumero().equals(numero)) {
-                contaAtual.creditar(valor);
-                return; // Achou e alterou, pode sair do método
-            }
+        this.contaAtual = procurar(numero);
+        if (contaAtual.procurar(numero) == null) {
+            printError(contaAtual.getNumero());
         }
-        printError(numero);
+        contaAtual.creditar(valor);
     }
 
     public void debitar(String numero, double valor) {
-        for (int i = 0; i < this.idx; i++) {
-            ContaAbstrata contaAtual = this.contas.get(i);
-            if (contaAtual.getNumero().equals(numero)) {
-                contaAtual.debitar(valor);
-                return;
-            }
+        ContaAbstrata contaAtual = procurar(numero);
+        if (contaAtual == null) {
+            printError(contaAtual.getNumero());
         }
-        printError(numero);
+        contaAtual.debitar(valor);
     }
 
     public void renderJuros(String numero) {
-        for (int i = 0; i < this.idx; i++) {
-            ContaAbstrata contaAtual = this.contas.get(i);
-            if (contaAtual.getNumero().equals(numero)) {
-                // Verificando se a conta realmente é uma Poupanca
-                if (contaAtual instanceof Poupanca) {
-                    ((Poupanca) contaAtual).renderJuros(this.taxa); 
-                    return;
-                } 
-                else {
-                    throw new RuntimeException("Não é do tipo Poupança!");
-                }
-            }
+        ContaAbstrata contaAtual = procurar(numero);
+        if (contaAtual == null) {
+            if (!(contaAtual instanceof Poupanca)) {
+                throw new RuntimeException("Não é do tipo Poupanca");
+            } 
+            ((Poupanca) contaAtual).renderJuros(this.taxa);
         }
-        printError(numero);
+        printError(contaAtual.getNumero());
     }
 
     public void renderBonus(String numero) {
-        for (int i = 0; i < this.idx; i++) {
-            ContaAbstrata contaAtual = this.contas.get(i);
-            if (contaAtual.getNumero().equals(numero)) {
-                // Verificando se é uma conta do tipo Especial
-                if (contaAtual instanceof ContaEspecial) {
-                    // Faz o "Casting" (conversão) para o Java liberar os métodos da ContaEspecial
-                    ContaEspecial especialAtual = (ContaEspecial) contaAtual;
-                    especialAtual.renderBonus();
-                    return;
-                }
-                else {
-                    throw new RuntimeException("Não é do tipo Especial");
-                }
+        ContaAbstrata contaAtual = procurar(numero);
+        if (contaAtual == null) {
+            // Verificando se é uma conta do tipo Especial
+            if (!(contaAtual instanceof ContaEspecial)) {
+                throw new RuntimeException("Não é do tipo Especial");
             }
+            ContaEspecial especialAtual = (ContaEspecial) contaAtual;
+            especialAtual.renderBonus();
+            return;
         }
-        System.out.println("Erro: Conta especial não encontrada!");
+        printError(contaAtual.getNumero());
     }
 
     public void transferir(String numeroPagador, String numeroRecebedor, double valor) {
         ContaAbstrata pagador = null;
         ContaAbstrata recebedor = null;
-        for (int i = 0; i < this.idx; i++) {
-            ContaAbstrata contaAtual = this.contas.get(i);
-            if (contaAtual.getNumero().equals(numeroPagador)) {
-                pagador = contaAtual;
-            }
-
-            if (contaAtual.getNumero().equals(numeroRecebedor)) {
-                recebedor = contaAtual;
-            }
+        if (contaAtual.procurar(numeroPagador)) {
+            pagador = contaAtual;
         }
 
+        if (contaAtual.procurar(numeroRecebedor)) {
+            recebedor = contaAtual;
+        }
+    
         if (pagador == null || recebedor == null || pagador == recebedor) {
-            System.out.println("Erro: Verififque o numero das Contas");
-            return;
+            throw new RuntimeException("Erro: Verififque o numero das Contas");
         }
         
         pagador.debitar(valor);
@@ -106,19 +68,142 @@ public class Banco {
     }
 
     public double getSaldo(String numero) {
-        for (int i = 0; i < this.idx; i++) {
-            ContaAbstrata contaAtual = this.contas.get(i);
-            if (contaAtual.getNumero().equals(numero)) {
-                return contaAtual.getSaldo();
-            }
+        ContaAbstrata contaAtual = procurar(numero);
+        if (contaAtual == null) {
+            return contaAtual.getSaldo();
         }
-        printError(numero);
+        System.out.println("Erro: Verififque o numero das Contas");
         return -1;
     }
 
-    public void printError(String numero) {
-        System.out.println("Erro: Conta " + numero + " não encontrada!");
+    
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Banco {
+    // Atributo crucial para desacoplar o Banco do tipo de armazenamento
+    private RepositorioContas contas;
+    private double taxa;
+
+    // O construtor recebe qualquer implementação de RepositorioContas
+    public Banco(RepositorioContas repositorio) {
+        this.contas = repositorio;
+        this.taxa = 0.15;
+    }    
+
+    public void creditar(String numero, double valor) {
+        ContaAbstrata contaAtual = contas.procurar(numero);
+        if (conta == null) {
+            printError(numero);
+        }
+        conta.creditar(valor);
     }
 
+    public void debitar(String numero, double valor) {
+        ContaAbstrata conta = contas.procurar(numero);
+        if (conta == null) {
+            printError(numero);
+        }
+        conta.debitar(valor);
+    }
 
+    public void renderJuros(String numero) {
+        ContaAbstrata conta = contas.procurar(numero);
+        if (conta == null) {
+            printError(numero);
+        }
+
+        if (conta instanceof Poupanca) {
+            ((Poupanca) conta).renderJuros(this.taxa);
+        } else {
+            throw new RuntimeException("Erro: Conta " + numero + " não é do tipo Poupança!");
+        }
+    }
+
+    public void renderBonus(String numero) {
+        ContaAbstrata conta = contas.procurar(numero);
+        if (conta == null) {
+            printError(numero);
+        }
+        
+        if (conta instanceof ContaEspecial) {
+            ((ContaEspecial) conta).renderBonus();
+        } else {
+            throw new RuntimeException("Erro: Conta " + numero + " não é do tipo Especial!");
+        }
+    }
+
+    public void transferir(String numeroPagador, String numeroRecebedor, double valor) {
+        ContaAbstrata pagador = contas.procurar(numeroPagador);
+        if (pagador == null) {
+            printError(numeroPagador);
+        }
+
+        ContaAbstrata recebedor = contas.procurar(numeroRecebedor);
+        if (recebedor == null) {
+            printError(numeroRecebedor);
+        }
+        
+        if (pagador == recebedor) {
+            throw new RuntimeException("Erro: Não é possível transferir para a mesma conta!");
+        }
+        
+        pagador.debitar(valor);
+        recebedor.creditar(valor);
+    }
+
+    public double getSaldo(String numero) {
+        ContaAbstrata conta = contas.procurar(numero);
+        if (conta == null) {
+            printError(numero);
+        }
+        return conta.getSaldo();
+    }
+
+    public void printError(String numero) {
+        throw new RuntimeException("Erro: Conta " + numero + " não encontrada!");
+    }
 }
