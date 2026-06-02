@@ -26,21 +26,23 @@ public class Banco {
     public void renderJuros(String numero) throws ContaNaoEncontradaException, TipoContaInvalidoException{
         ContaAbstrata conta = contas.procurar(numero);
 
-        if (conta instanceof Poupanca) {
-            ((Poupanca) conta).renderJuros(this.taxa);
-        } else {
+        // Se a conta não for do tipo Poupanca
+        if (!(conta instanceof Poupanca)) {
             throw new TipoContaInvalidoException(numero, "Erro: Conta " + numero + " não é do tipo Poupança!");
         }
+
+        ((Poupanca) conta).renderJuros(this.taxa);
     }
 
     public void renderBonus(String numero) throws ContaNaoEncontradaException, TipoContaInvalidoException{
         ContaAbstrata conta = contas.procurar(numero);
-        
-        if (conta instanceof ContaEspecial) {
-            ((ContaEspecial) conta).renderBonus();
-        } else {
+
+        // Se a conta não for Especial 
+        if (!(conta instanceof ContaEspecial)) { 
             throw new TipoContaInvalidoException(numero, "Erro: Conta " + numero + " não é do tipo Especial!");
         }
+
+        ((ContaEspecial) conta).renderBonus();
     }
 
     public void transferir(String numeroPagador, String numeroRecebedor, double valor) throws ContaNaoEncontradaException, SaldoInsuficienteException, TransferenciaMesmaContaException{
