@@ -1,14 +1,6 @@
-import excecoes.ContaNaoEncontradaException;
-import excecoes.SaldoInsuficienteException;
-import excecoes.TipoContaInvalidoException;
-import negocio.Banco;
-import negocio.Conta;
-import negocio.ContaAbstrata;
-import negocio.ContaEspecial;
-import negocio.ContaImposto;
-import negocio.Poupanca;
-import repositorio.RepositorioContas;
-import repositorio.RepositorioContasArray;
+import excecoes.*;
+import negocio.*;
+import repositorio.*;
 
 public class Main {
     public static void main(String[] args) {
